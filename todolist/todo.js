@@ -3,7 +3,6 @@ const toDoInput = toDoForm.querySelector("input");
 const todobox = document.querySelector(".todobox");
 const todoCount=document.querySelector(".todocount");
 const allclear = document.querySelector(".allclear");
-
 let Todos=[];
 
 toDoForm.addEventListener("submit", addToDo);
@@ -30,9 +29,7 @@ function addLine (event) // circle누르면 완료 표시
         circle.src="check.png";
         div.style.textDecoration = "line-through";
         div.style.textDecorationColor = "black";
-        div.style.color="#606060"
-    
-        
+        div.style.color="#606060";
     }   
     else {
          circle.src="circle.png";
@@ -54,6 +51,15 @@ function Savetodos(){
     localStorage.setItem("todolist",JSON.stringify(Todos));
 }
 
+function changeToDo(event){
+    const todo = event.target.closest("li");
+    const updateToDo=prompt("메뉴명을 수정하세요",todo.querySelector("div").innerText);
+    event.target.closest("li").querySelector("div").innerText = updateToDo;
+    todoIndex =Todos.findIndex((item => item.id == todo.id));
+    Todos[todoIndex].text =event.target.closest("li").querySelector("div").innerText;
+   Savetodos();
+}
+
 function PaintToDo(newtodo)
 {
     const li = document.createElement("li");
@@ -61,16 +67,23 @@ function PaintToDo(newtodo)
     const circle = document.createElement("img");
     const btn_x = document.createElement("button");
     const count = document.querySelectorAll("li").length+1;
+    const btn_change = document.createElement("button");
 
     div.innerText=newtodo.text;
     circle.src="circle.png";
     btn_x.innerText="X";
     li.className="todoli"
+    btn_x.className="btn_x";
     li.id=newtodo.id;
+    btn_change.innerText="수정";
+    btn_change.className="btn_change";
 
     li.appendChild(circle);
     li.appendChild(div);
+    li.appendChild(btn_change);
     li.appendChild(btn_x);
+
+
     todobox.appendChild(li);
     toDoInput.value="";
     todoCount.innerText=` 할 일:${count}개`
@@ -79,6 +92,7 @@ function PaintToDo(newtodo)
     circle.addEventListener("click",addLine);
     btn_x.addEventListener("click",deleteToDo);
     allclear.addEventListener("click",clear);
+    btn_change.addEventListener("click",changeToDo);
  
 }
 
